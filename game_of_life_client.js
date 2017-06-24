@@ -38,24 +38,25 @@ function drawBoard(liveCells = []){
 }
 
 window.onload = () => {
-  drawBoard([
-    [0,0],
-  ]);
+  let currentBoard = [[5,5], [6,5], [7,5], [7,4], [6,3]];
+  drawBoard(currentBoard);
 
   let count = 0;
 
-  function updateBoard() {
-    count += 1;
-    drawBoard([
-      [0, count],
-    ]);
-
-    if(count >= 49) {
-      count = -1;
-    }
-
-    setTimeout(updateBoard, 200);
+  function requestNewBoard() {
+    const req = new XMLHttpRequest();
+    req.onload = handleNewBoard;
+    req.open("POST", "http://localhost:3000/worlds/next", true);
+    req.setRequestHeader("Content-type", "application/json");
+    req.send(JSON.stringify({live_cells: currentBoard}));
   }
 
-  setTimeout(updateBoard, 200);
+  function handleNewBoard() {
+    currentBoard = JSON.parse(this.response).live_cells;
+
+    drawBoard(currentBoard);
+    setTimeout(requestNewBoard, 200);
+  }
+
+  setTimeout(requestNewBoard, 200);
 };
