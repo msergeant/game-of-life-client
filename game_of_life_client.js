@@ -38,10 +38,32 @@ function drawBoard(liveCells = []){
 }
 
 window.onload = () => {
-  let currentBoard = [[5,5], [6,5], [7,5], [7,4], [6,3]];
+  let exploder = [[21,23], [21,24], [21,25], [21,26], [21,27], [25,23], [25,24], [25,25], [25,26], [25,27], [23,23], [23, 27]];
+  let glider = [[5,5], [6,5], [7,5], [7,4], [6,3]];
+  let currentBoard = exploder;
+  let running = false;
   drawBoard(currentBoard);
 
-  let count = 0;
+  const startButton = document.getElementById("start");
+  startButton.onclick = startStopClick;
+
+  const nextButton = document.getElementById("next");
+  nextButton.onclick = nextClick;
+
+  function startStopClick() {
+    running = !running;
+
+    if(running) {
+      startButton.textContent = "Stop";
+      requestNewBoard();
+    } else {
+      startButton.textContent = "Start";
+    }
+  }
+
+  function nextClick() {
+    requestNewBoard();
+  }
 
   function requestNewBoard() {
     const req = new XMLHttpRequest();
@@ -55,8 +77,9 @@ window.onload = () => {
     currentBoard = JSON.parse(this.response).live_cells;
 
     drawBoard(currentBoard);
-    setTimeout(requestNewBoard, 200);
+    if(running) {
+      setTimeout(requestNewBoard, 200);
+    }
   }
 
-  setTimeout(requestNewBoard, 200);
 };
