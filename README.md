@@ -5,6 +5,8 @@ server side implementations of the game of life and call them through an
 API. This will then display the results.
 
 Here are the implementation APIs that I have done so far:
+
 [Rails API](https://github.com/msergeant/game-of-life-rails)
+
 [Phoenix API](https://github.com/msergeant/game-of-life-phoenix)
 
