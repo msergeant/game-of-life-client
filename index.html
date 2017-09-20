@@ -5,8 +5,17 @@
   </head>
   <body style=" background: lightblue;">
       <canvas id="canvas" width="620px" height="620px" style="background: #fff; margin:20px"></canvas>
-      <button type="button" id="start">Start</button>
-      <button type="button" id="next">Next</button>
+      <div style="width:100%">
+        <button type="button" id="start">Start</button>
+        <button type="button" id="next">Next</button>
+        <label for="urlBox">URL:</label>
+        <input style="width:250px;"type="text" id="urlBox" value="http://localhost:4000/worlds/next"/>
+        <select id="startPattern">
+          <option value="randy">Random</option>
+          <option value="exploder">Exploder</option>
+          <option value="glider">Glider</option>
+        </select>
+      </div>
   </body>
 </html>
 

@@ -24,11 +24,13 @@ function drawBoard(liveCells = []){
 
   function drawLiveCells() {
     liveCells.forEach( ([x, y]) => {
-      const rectX = padding + x * (cellLength);
-      const rectY = padding + y * (cellLength);
+      if(x >= 0 && x <= 49 && y >= 0 && y <= 49) {
+        const rectX = padding + x * (cellLength);
+        const rectY = padding + y * (cellLength);
 
-      context.fillStyle='rgb(100, 149, 237)';
-      context.fillRect(rectX, rectY, cellLength, cellLength);
+        context.fillStyle='rgb(100, 149, 237)';
+        context.fillRect(rectX, rectY, cellLength, cellLength);
+      }
     });
   }
 
@@ -38,10 +40,8 @@ function drawBoard(liveCells = []){
 }
 
 window.onload = () => {
-  let exploder = [[21,23], [21,24], [21,25], [21,26], [21,27], [25,23], [25,24], [25,25], [25,26], [25,27], [23,23], [23, 27]];
-  let glider = [[5,5], [6,5], [7,5], [7,4], [6,3]];
-  let currentBoard = exploder;
   let running = false;
+  let currentBoard = getBoard('randy');
   drawBoard(currentBoard);
 
   const startButton = document.getElementById("start");
@@ -49,6 +49,9 @@ window.onload = () => {
 
   const nextButton = document.getElementById("next");
   nextButton.onclick = nextClick;
+
+  const startPatterDropdown = document.getElementById("startPattern");
+  startPatterDropdown.onchange = startPatternChange;
 
   function startStopClick() {
     running = !running;
@@ -61,14 +64,39 @@ window.onload = () => {
     }
   }
 
+  function startPatternChange() {
+    if(!running) {
+      currentBoard = getBoard(document.getElementById("startPattern").value);
+      drawBoard(currentBoard);
+    }
+  }
+
+  function getBoard(boardName) {
+    const randy = [];
+    [...Array(50)].forEach((_,i) => {
+      [...Array(50)].forEach((_,j) => {
+        if(Math.random() >= 0.8) {
+          randy.push([i,j]);
+        }
+      })
+    });
+    const boards = {
+      exploder: [[21,23], [21,24], [21,25], [21,26], [21,27], [25,23], [25,24], [25,25], [25,26], [25,27], [23,23], [23, 27]],
+      glider: [[5,5], [6,5], [7,5], [7,4], [6,3]],
+      randy: randy
+    }
+    return boards[boardName];
+  }
+
   function nextClick() {
     requestNewBoard();
   }
 
   function requestNewBoard() {
     const req = new XMLHttpRequest();
+    const url = document.getElementById("urlBox").value;
     req.onload = handleNewBoard;
-    req.open("POST", "http://localhost:3000/worlds/next", true);
+    req.open("POST", url, true);
     req.setRequestHeader("Content-type", "application/json");
     req.send(JSON.stringify({live_cells: currentBoard}));
   }
@@ -78,7 +106,7 @@ window.onload = () => {
 
     drawBoard(currentBoard);
     if(running) {
-      setTimeout(requestNewBoard, 200);
+      setTimeout(requestNewBoard, 0);
     }
   }
 
