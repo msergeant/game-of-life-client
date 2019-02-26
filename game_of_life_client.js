@@ -42,6 +42,9 @@ function drawBoard(liveCells = []){
 window.onload = () => {
   let running = false;
   let currentBoard = getBoard('randy');
+  let requestStart = 0;
+  let totalRequests = 0;
+  let totalTime = 0;
   drawBoard(currentBoard);
 
   const startButton = document.getElementById("start");
@@ -53,10 +56,17 @@ window.onload = () => {
   const startPatterDropdown = document.getElementById("startPattern");
   startPatterDropdown.onchange = startPatternChange;
 
+  const responseTimeElement = document.getElementById("responseTime");
+  const averageResponseTimeElement = document.getElementById("averageResponseTime");
+
   function startStopClick() {
     running = !running;
 
     if(running) {
+      totalRequests = 0;
+      totalTime = 0;
+      responseTimeElement.textContent = "";
+      averageResponseTimeElement.textContent = "";
       startButton.textContent = "Stop";
       requestNewBoard();
     } else {
@@ -99,10 +109,16 @@ window.onload = () => {
     req.open("POST", url, true);
     req.setRequestHeader("Content-type", "application/json");
     req.send(JSON.stringify({live_cells: currentBoard}));
+    requestStart = performance.now();
+    totalRequests += 1;
   }
 
   function handleNewBoard() {
     currentBoard = JSON.parse(this.response).live_cells;
+    let elapsedTime = performance.now() - requestStart;
+    totalTime += elapsedTime;
+    responseTimeElement.textContent = elapsedTime.toFixed(2) + " ms";
+    averageResponseTimeElement.textContent = (totalTime / totalRequests).toFixed(2)+ " ms";
 
     drawBoard(currentBoard);
     if(running) {
