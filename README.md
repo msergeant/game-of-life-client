@@ -21,3 +21,10 @@ Here are the implementation APIs that I have done so far:
 2. Change the URL to the server running your API.
 3. Click 'Start' to start a loop that will repeatedly request new
    iterations of game of life board.
+
+## How to test that an API is responding properly
+
+1. Open `test.html` in a browser.
+2. Change the URL to the server running your API.
+3. Click 'Start' to run tests that will verify that the API is
+   responding properly.
