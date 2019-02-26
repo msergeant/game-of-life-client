@@ -14,3 +14,10 @@ Here are the implementation APIs that I have done so far:
 
 [Node API](https://github.com/msergeant/game-of-life-node)
 
+
+## How to use this client
+
+1. Open `index.html` in a browser.
+2. Change the URL to the server running your API.
+3. Click 'Start' to start a loop that will repeatedly request new
+   iterations of game of life board.
