@@ -40,7 +40,9 @@ async function runTests() {
 
     return new Promise((resolve) => {
       req.onload = function () {
-        if (this.status >= 200 && this.status < 300) {
+        if (!this.response || this.response.length == 0) {
+          resolve(testResult(false, "The API response was empty"));
+        } else if (this.status >= 200 && this.status < 300) {
           let cells = JSON.parse(this.response).live_cells;
           if(cells == undefined || !Array.isArray(cells) || cells.length != 0) {
             resolve(testResult(false, "The response is incorrect for an empty list. Response should be {live_cells: []}"));
